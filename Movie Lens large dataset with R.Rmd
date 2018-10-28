@@ -1,0 +1,65 @@
+---
+title: "Movielens"
+author: "LJO Minnesota"
+date: "October 27, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot
+
+
+setwd("~/")
+#open dataset MovieLens 100000 records
+movie<-read.csv("Movielens DF.csv")
+str(movie)
+
+#add headers for better variable control
+headers<-c("userId","movieId","rating","timestamp")
+colnames(movie) <- headers
+
+str(movie)
+#we confirm 99999 records to be analyzed, this is a basic analysis to learn trends and find helpful info.
+
+#we need to learn about the relationship of the variables, as well as learning of any na's or outliers.
+plot(movie$timestamp,movie$userId)
+#plot shows that there are 2 times during this survey where alot of people rented movies and some users who rent a lot of movies to be explored later
+
+sum(is.na(movie))
+# 0 which is helpful but very clean. Next dataset I hope to work with Mice package.
+#as we research this dataset, it has come to light that we are trying to learn buying trends and outliers may be discovered in further research, but in some basic plotting, there doesn't appear that outliers will impact this analysis. 
+usagesort<-head(sort(table(movie$timestamp), decreasing = TRUE),n=5)#the top 5 times that movies were rented.
+#a little surprising, we need a bigger sample size
+usagesort<-head(sort(table(movie$timestamp), decreasing = TRUE),n=12)#the top 5 times that movies were rented.
+usagesort
+#we can use this to learn about these times and rental trends
+conschoice<-head(sort(table(movie$userId), decreasing = TRUE),n=10) #to sort to learn about top users
+conschoice
+movieuser405<-movie[which(movie$userId==405),]
+user405ratings<-head(sort(table(movieuser405$rating), decreasing = TRUE),n=10) #to sort to learn about top users
+user405ratings
+#  1   2   5   3   4 
+# 485  73  68  63  48
+#the trend is not perfectly trending down. the lowest number in ratings is with 4, there is an uptick with 5.
+#more analysis will be done on this, as other projects are calling.
